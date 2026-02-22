@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cats-dogs-smoke-test
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: smoke-test
+          image: python:3.10-slim
+          command: ["sh", "-c"]
+          args:
+            - |
+              pip install requests &&
+              python - <<EOF
+              import requests, sys
+              url = "http://cats-dogs-service/health"
+              r = requests.get(url, timeout=10)
+              print("Health response:", r.text)
+              sys.exit(0 if r.status_code == 200 else 1)
+              EOF

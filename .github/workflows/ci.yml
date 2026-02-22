@@ -1,30 +1,11 @@
-name: CI Pipeline
+- name: Deploy to Kubernetes
+  run: |
+    kubectl apply -f k8s/deployment.yaml
+    kubectl apply -f k8s/service.yaml
+    kubectl rollout status deployment/cats-dogs-deployment --timeout=180s
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-
-jobs:
-  build-test:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.10'
-
-    - name: Install dependencies
-      run: |
-        pip install --upgrade pip
-        pip install -r requirements.txt
-
-    - name: Run unit tests
-      run: pytest
-
-    - name: Build Docker image
-      run: docker build -t cats-dogs-mlops:ci .
+- name: Run in-cluster smoke test
+  run: |
+    kubectl delete job cats-dogs-smoke-test --ignore-not-found
+    kubectl apply -f k8s/smoke-test-job.yaml
+    kubectl wait --for=condition=complete job/cats-dogs-smoke-test --timeout=120s

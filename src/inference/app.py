@@ -22,7 +22,7 @@ model = load_model()
 @app.get("/health")
 def health():
     logging.info("Health check called")
-    return {"status": "UP"}
+    return {"status": "ok"}
 
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
