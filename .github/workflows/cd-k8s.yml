@@ -16,7 +16,7 @@ jobs:
     - name: Set up Minikube
       uses: medyagh/setup-minikube@latest
 
-    - name: Use Minikube Docker
+    - name: Use Minikube Docker daemon
       run: |
         eval $(minikube docker-env)
 
