@@ -14,7 +14,7 @@ logging.basicConfig(
 )
 
 request_count = 0
-app = FastAPI(title="Cats vs Dogs Inference Service")
+app = FastAPI()
 
 templates = Jinja2Templates(directory="src/inference/templates")
 model = load_model()
