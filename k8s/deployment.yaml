@@ -13,10 +13,14 @@ spec:
         app: cats-dogs
     spec:
       containers:
-      - name: cats-dogs-container
-        image: cats-dogs-mlops:local
-        imagePullPolicy: Never
-        ports:
-        - containerPort: 8000
-          initialDelaySeconds: 10
-          periodSeconds: 10
+        - name: cats-dogs-container
+          image: cats-dogs-mlops:local
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8000
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
